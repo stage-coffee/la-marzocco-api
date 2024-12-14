@@ -15,7 +15,7 @@ paths:
   /oauth/v2/token:
     post:
       tags:
-        - General
+        - Remote
       summary: Auth
       requestBody:
         content:
@@ -68,7 +68,7 @@ paths:
   /api/professional/customer:
     get:
       tags:
-        - General
+        - Remote
       summary: Customer
       responses:
         "200":
@@ -225,7 +225,7 @@ paths:
   /v1/professional/machines/awsproxy/{serial_number}/things/{relayr_id}/commands:
     get:
       tags:
-        - General
+        - Remote
       summary: Commands
       parameters:
         - name: serial_number
@@ -248,7 +248,7 @@ paths:
   /api/professional/fleet:
     get:
       tags:
-        - General
+        - Remote
       summary: Fleet
       responses:
         "200":
@@ -283,7 +283,7 @@ paths:
   /api/professional/fleet/users/{serial_number}:
     get:
       tags:
-        - General
+        - Remote
       summary: Fleet users
       parameters:
         - name: serial_number
@@ -315,7 +315,7 @@ paths:
   /api/machine-models:
     get:
       tags:
-        - General
+        - Remote
       summary: Machine Models
       responses:
         "200":
@@ -343,7 +343,7 @@ paths:
   /api/countries:
     get:
       tags:
-        - General
+        - Remote
       summary: Countries
       responses:
         "200":
@@ -455,7 +455,7 @@ paths:
   /api/professional/news:
     get:
       tags:
-        - General
+        - Remote
       summary: News
       responses:
         "200":
@@ -493,7 +493,7 @@ paths:
         description: Override base path for all operations relating to machine metrics
     get:
       tags:
-        - General
+        - Remote
       summary: Machine Metrics
       parameters:
         - name: serial_number
@@ -1074,7 +1074,7 @@ paths:
         description: Override base path for all operations relating to machine metrics
     get:
       tags:
-        - General
+        - Remote
       summary: Machine Metrics Between Dates
       parameters:
         - name: expr
