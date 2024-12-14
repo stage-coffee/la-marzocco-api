@@ -1,0 +1,1168 @@
+openapi: 3.0.0
+info:
+  title: La Marzocco Professional API
+  version: 1.0.0
+servers:
+  - url: https://cms.lamarzocco.io
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+security:
+  - bearerAuth: []
+paths:
+  /oauth/v2/token:
+    post:
+      tags:
+        - General
+      summary: Auth
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                client_id:
+                  type: string
+                  example: "{{client_id}}"
+                client_secret:
+                  type: string
+                  example: "{{client_secret}}"
+                grant_type:
+                  type: string
+                  enum: ["password"]
+                  example: password
+                username:
+                  type: string
+                  example: "{{username}}"
+                password:
+                  type: string
+                  example: "{{password}}"
+      security: []
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  expires_in:
+                    type: integer
+                  token_type:
+                    enum: ["bearer"]
+                    type: string
+                  scope:
+                    type: string
+                  refresh_token:
+                    type: string
+              example:
+                access_token: XXXX
+                expires_in: 3600
+                token_type: bearer
+                scope: null
+                refresh_token: XXXX
+  /api/professional/customer:
+    get:
+      tags:
+        - General
+      summary: Customer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                  status_code:
+                    type: integer
+                    enum: [200]
+                  data:
+                    type: object
+                    properties:
+                      uuid:
+                        type: string <uuid>
+                      name:
+                        type: string
+                        enum: ["api"]
+                      active:
+                        type: bool
+                      country:
+                        type: object
+                        properties:
+                          uuid:
+                            type: string <uuid>
+                          name:
+                            type: string
+                          alpha2Code:
+                            enum: ["EN"]
+                          country:
+                            type: string
+                      email:
+                        type: string
+                      image:
+                        type: string
+                      role:
+                        type: object
+                        properties:
+                          uuid:
+                            type: string <uuid>
+                          name:
+                            type: string
+                            enum: ["Customer"]
+                          role:
+                            type: string
+                            enum: ["ROLE_CUSTOMER"]
+                          description:
+                            type: string
+                      username:
+                        type: string
+                      authenticationType:
+                        type: string
+                        enum: ["INTERNAL"]
+                      customerAuthenticationType:
+                        type: array
+                        items:
+                          type: any
+                      birthday:
+                        type: string
+                        description: Account start date in ISO 8601 with offset e.g. 2024-01-01T00:00:00+00:00
+                      businessSector:
+                        type: string
+                      disposalCommercial:
+                        type: boolean
+                      disposalThirdParty:
+                        type: boolean
+                      disposalProfile:
+                        type: boolean
+                      emailConfirmed:
+                        type: boolean
+                      gender:
+                        type: string
+                      ownMachine:
+                        type: int
+                      privacy:
+                        type: string
+                      socialNetworkId:
+                        type: string
+                      business:
+                        type: string
+                      businessType:
+                        type: string
+                      coffeeRoaster:
+                        type: string
+                      countryOther:
+                        type: string
+                      areaOperation:
+                        type: string
+                      brandServiced:
+                        type: string
+                      personOfContact:
+                        type: string
+                      phoneModel:
+                        type: string
+                      id:
+                        type: integer
+                      phone:
+                        type: string
+                      mobile:
+                        type: string
+                      hobbiesProfessional:
+                        type: array
+              example:
+                status: true
+                status_code: 200
+                data:
+                  uuid: XXX
+                  name: api
+                  active: true
+                  country:
+                    uuid: XXX
+                    name: Other
+                    alpha2Code: EN
+                    country: ot_OT
+                  email: XXX
+                  image: null
+                  role:
+                    uuid: XXX
+                    name: Customer
+                    role: ROLE_CUSTOMER
+                    description: Default role for user registered with mobile application
+                  username: XXX
+                  authenticationType: INTERNAL
+                  customerAuthenticationType: []
+                  birthday:
+                    type: String
+                    description: Account start date in ISO 8601 with offset e.g. 2024-01-01T00:00:00+00:00
+                  businessSector: null
+                  disposalCommercial: false
+                  disposalThirdParty: false
+                  disposalProfile: false
+                  emailConfirmed: true
+                  gender: ""
+                  ownMachine: 1
+                  privacy: null
+                  socialNetworkId: null
+                  business: null
+                  businessType: null
+                  coffeeRoaster: null
+                  countryOther: null
+                  areaOperation: null
+                  brandServiced: null
+                  personOfContact: null
+                  phoneModel: null
+                  id:
+                    type: integer
+                  phone: null
+                  mobile: null
+                  hobbiesProfessional: []
+  /v1/professional/machines/awsproxy/{serial_number}/things/{relayr_id}/commands:
+    get:
+      tags:
+        - General
+      summary: Commands
+      parameters:
+        - name: serial_number
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: relayr_id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/professional/fleet:
+    get:
+      tags:
+        - General
+      summary: Fleet
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: true
+                status_code: 200
+                data:
+                  - uuid: XXX-uuid
+                    name: XX000000
+                    communicationKey: test-comunication-key
+                    customer: XXX@XXX.XXX
+                    machine:
+                      uuid: XXX-uuid
+                      name: null
+                      relayrDeviceId: XXX-uuid
+                      edgehogDeviceId: 313
+                      model:
+                        uuid: XXX-uuid
+                        name: GB5
+                        description: GB5
+                        slug: gb5
+                      ownerNumber: 3
+                      serialNumber: XX000000
+                      type: MACHINE_INSTANCE
+                    paringDate: "2024-07-12T18:45:36+00:00"
+                    userType: USERTYPE_ADMIN
+  /api/professional/fleet/users/{serial_number}:
+    get:
+      tags:
+        - General
+      summary: Fleet users
+      parameters:
+        - name: serial_number
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: true
+                status_code: 200
+                data:
+                  - uuid: XXX-uuid
+                    image: null
+                    name: XXX
+                    customerRole: admin
+                    email: XXX@XXX.XXX
+                  - uuid: XXX-uuid
+                    image: null
+                    name: XXX
+                    customerRole: admin
+                    email: XXX@XXX.XXX
+  /api/machine-models:
+    get:
+      tags:
+        - General
+      summary: Machine Models
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: true
+                status_code: 200
+                data:
+                  - uuid: XXX-uuid
+                    name: GS3 AV
+                    description: GS3 AV
+                    slug: gs3_av
+                    image: >-
+                      https://cms.lamarzocco.io/uploads/images/5dcab5ec2b8f6741902629.jpg
+                  - uuid: XXX-uuid
+                    name: GS3 MP
+                    description: GS3 MP
+                    slug: gs3_mp
+                    image: >-
+                      https://cms.lamarzocco.io/uploads/images/5dcab5c84b659659205853.jpg
+  /api/countries:
+    get:
+      tags:
+        - General
+      summary: Countries
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: true
+                status_code: 200
+                data:
+                  - uuid: dd4dce8a-3a24-47d2-a1bc-06f9d012d29f
+                    name: Italia
+                    alpha2Code: IT
+                    country: it_IT
+                  - uuid: 6750cd9e-5e8c-4286-aff8-01af43850a18
+                    name: USA
+                    alpha2Code: US
+                    country: en_US
+                  - uuid: 3cd1793e-240d-4af6-96bc-17556c9bd81f
+                    name: United Kingdom
+                    alpha2Code: UK
+                    country: en_GB
+                  - uuid: 0af14faf-d362-4039-82d4-c162250d3553
+                    name: Germany
+                    alpha2Code: DE
+                    country: de_DE
+                  - uuid: 798b2b78-e52c-4c13-a6fa-93b43f750eb9
+                    name: Spain
+                    alpha2Code: ES
+                    country: es_ES
+                  - uuid: 1705498d-55fd-46bf-bd09-a4c9491ad75a
+                    name: Australia
+                    alpha2Code: AU
+                    country: en_AU
+                  - uuid: 286e5255-10bc-4478-9faa-7ae325324a23
+                    name: New Zealand
+                    alpha2Code: NZ
+                    country: en_NZ
+                  - uuid: b2452033-36a7-41b6-8112-16e07076c0b4
+                    name: Other
+                    alpha2Code: EN
+                    country: ot_OT
+                  - uuid: b6535af9-6c34-46fb-b452-839610c5a8d0
+                    name: China
+                    alpha2Code: CN
+                    country: zh_CN
+                  - uuid: 96d1c4e3-e9e4-4a62-9d89-3503662ef263
+                    name: South Korea
+                    alpha2Code: KR
+                    country: ko_KR
+                  - uuid: 7bb13a8b-bf58-42ac-9696-63d9d70ebc28
+                    name: Kuwait
+                    alpha2Code: KW
+                    country: ar_KW
+                  - uuid: 4e928cc7-c629-4573-b1ad-434874aaf055
+                    name: Qatar
+                    alpha2Code: QA
+                    country: ar_QA
+                  - uuid: c91824fc-1121-4534-ad00-e9a46362f1fd
+                    name: United Arab Emirates
+                    alpha2Code: AE
+                    country: ar_AE
+                  - uuid: f1ebdd3a-9139-4991-b39a-c6d2fae347aa
+                    name: Saudi Arabia
+                    alpha2Code: SA
+                    country: ar_SA
+                  - uuid: eec9865b-0e2a-4ae6-b7bb-ac4c99e6c434
+                    name: Bahrein
+                    alpha2Code: BH
+                    country: ar_BH
+                  - uuid: a0bedece-f058-4106-a049-73045e25d5af
+                    name: Russia
+                    alpha2Code: RU
+                    country: en_RU
+                  - uuid: df507afb-ebda-4b2b-a75a-f839f335cfe1
+                    name: Cyprus
+                    alpha2Code: CY
+                    country: el_CY
+                  - uuid: a1bf34e2-a5f1-4528-bfae-d4daad213d8a
+                    name: Israel
+                    alpha2Code: IL
+                    country: en_IL
+                  - uuid: d73b3872-985d-4b0b-8934-a41358495af8
+                    name: France
+                    alpha2Code: FR
+                    country: fr_FR
+                  - uuid: 6ada7f47-e349-4058-8731-5aa2e461cea2
+                    name: Ireland
+                    alpha2Code: IE
+                    country: en_IE
+                  - uuid: 70d42ed9-46b0-4b3b-9821-617d7da9a190
+                    name: South Africa
+                    alpha2Code: ZA
+                    country: en_ZA
+                  - uuid: 6990d341-f087-4744-bc14-550a240870c8
+                    name: Norway
+                    alpha2Code: "NO"
+                    country: en_NO
+                  - uuid: a83cdc0b-a233-4962-ba53-fa72023eee13
+                    name: Denmark
+                    alpha2Code: DK
+                    country: en_DK
+                  - uuid: 8967c21d-160d-42e2-a682-8a50952cefa8
+                    name: Austria
+                    alpha2Code: AT
+                    country: de_AT
+  /api/professional/news:
+    get:
+      tags:
+        - General
+      summary: News
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: true
+                status_code: 200
+                data:
+                  news:
+                    - uuid: 379c6abe-71c7-4c9b-96ba-13378a3654e3
+                      name: La Marzocco Home App v3.1.0 is out!
+                      description: "<p>La Marzocco Home app v3.1.0 has been released!</p>\r\n\r\n<p>This version allows you to update your machine's gateway to 3.4-rc5. Follow the notification in the information section of the app to update your machine.</p>\r\n\r\n<p>These new updates bring some exciting features to La Marzocco Home App, such as a new Auto Standby Logic, the Power Options, and Automatic Daylight Saving Time Management.</p>\r\n\r\n<p>The new Auto Standby Logic will allow you to instruct your machine to go into standby after a specific time following the end of a brew or from when the machine was turned on. The specific amount of time is customizable, and is an optional feature allowing for energy savings.</p> \r\n\r\n<p>The Power Options replace the Weekly Schedule.</p>\r\n<p>You can now set up to 25 different on/off slots for your machine, also allowing you to decide whether your steam boiler also needs to turn on. During a programmed power-on slot, the auto standby logic will not be enabled to ensure your machine is ready to brew according to your schedule.</p>\r\n\r\n<p>The latest gateway firmware update also includes Automatic Daylight Saving Time Management. This allows your machine to automatically be in sync with your timezone and ready for daylight saving time changes. Once your machine is updated, connect to it \"locally\" (green line at the top of the screen with the Wi-Fi symbol on the right) to enable it.</p>"
+                      createdAt: "2023-07-24T12:44:04+00:00"
+                      updatedAt: "2024-03-29T08:56:50+00:00"
+                      subtitle: null
+                      image: >-
+                        https://cms.lamarzocco.io/uploads/images/65f946fd99609846154779.PNG
+                      videoUri: null
+                      descriptionSecond: null
+                  tags:
+                    - uuid: 91ebc080-dee3-486c-9bfc-73fbbdcbba60
+                      name: food
+                      description: food
+                    - uuid: 673f6536-e51b-4e9d-b9da-42d8401c7a3d
+                      name: lifestyle
+                      description: lifestyle
+                  currentTag: null
+  /v1/professional/machines/awsproxy/{serial_number}/things/{relayr_id}/metrics:
+    servers:
+      - url: https://gw-lmz.lamarzocco.io
+        description: Override base path for all operations relating to machine metrics
+    get:
+      tags:
+        - General
+      summary: Machine Metrics
+      parameters:
+        - name: serial_number
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: relayr_id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: true
+                data:
+                  FlushStoppedGroup2DoseBCounter:
+                    value: "651"
+                    type: number
+                    time: 1734100453969
+                  WaterConductivity:
+                    value: "272"
+                    type: number
+                    time: 1734104982130
+                  MachineConfiguration:
+                    value:
+                      subFamily: AV
+                      machineCapabilities:
+                        - family: GB5
+                          groupsNumber: 2
+                          coffeeBoilersNumber: 1
+                          hasCupWarmer: false
+                          hasCupWarmerButton: false
+                          hasProportionalSteam: false
+                          hasLowLevelSensor: true
+                          hasBluetooth: false
+                          hasMixingValue: false
+                          coffeeBoilerSizeWatts: 1400
+                          steamBoilerSizeWatts: 3000
+                          cupWarmerHeaterSizeWatts: 150
+                          machineVoltageVolts: 240
+                          steamBoilersNumber: 1
+                          teaDosesNumber: 1
+                          autoSteamsNumber: 0
+                      groupCapabilities:
+                        - capabilities:
+                            groupType: AV_Group
+                            groupNumber: Group1
+                            boilerId: CoffeeBoiler1
+                            hasScale: false
+                            hasSolenoid: true
+                            hasStraightInPortafilter: false
+                            hasAutoCleanSolenoid: false
+                            hasFlowmeter: true
+                            hasNeckHeaterExists: false
+                            hasRingHeaterExists: false
+                            numberOfDoses: 4
+                          doses:
+                            - groupNumber: Group1
+                              doseIndex: DoseA
+                              doseType: PulsesType
+                              stopTarget: 95
+                            - groupNumber: Group1
+                              doseIndex: DoseB
+                              doseType: PulsesType
+                              stopTarget: 288
+                            - groupNumber: Group1
+                              doseIndex: DoseC
+                              doseType: PulsesType
+                              stopTarget: 569
+                            - groupNumber: Group1
+                              doseIndex: DoseD
+                              doseType: PulsesType
+                              stopTarget: 275
+                          doseMode:
+                            groupNumber: Group1
+                            brewingType: PulsesType
+                        - capabilities:
+                            groupType: AV_Group
+                            groupNumber: Group2
+                            boilerId: CoffeeBoiler1
+                            hasScale: false
+                            hasSolenoid: true
+                            hasStraightInPortafilter: false
+                            hasAutoCleanSolenoid: false
+                            hasFlowmeter: true
+                            hasNeckHeaterExists: false
+                            hasRingHeaterExists: false
+                            numberOfDoses: 4
+                          doses:
+                            - groupNumber: Group2
+                              doseIndex: DoseA
+                              doseType: PulsesType
+                              stopTarget: 95
+                            - groupNumber: Group2
+                              doseIndex: DoseB
+                              doseType: PulsesType
+                              stopTarget: 288
+                            - groupNumber: Group2
+                              doseIndex: DoseC
+                              doseType: PulsesType
+                              stopTarget: 550
+                            - groupNumber: Group2
+                              doseIndex: DoseD
+                              doseType: PulsesType
+                              stopTarget: 275
+                          doseMode:
+                            groupNumber: Group2
+                            brewingType: PulsesType
+                      boardDescriptor:
+                        - boardType: GB5ButtonBoard
+                          hardwareMajor: 3
+                          hardwareMinor: 255
+                          firmwareMajor: 255
+                          firmwareMinor: 255
+                          firmwareBugFix: 255
+                        - boardType: UniversalBoard24V
+                          hardwareMajor: 0
+                          hardwareMinor: 3
+                          firmwareMajor: 0
+                          firmwareMinor: 19
+                          firmwareBugFix: 0
+                        - boardType: CDRWaterProbePosition2
+                          hardwareMajor: 1
+                          hardwareMinor: 255
+                          firmwareMajor: 1
+                          firmwareMinor: 24
+                          firmwareBugFix: 0
+                        - boardType: Cortex5Board
+                          hardwareMajor: 5
+                          hardwareMinor: 255
+                          firmwareMajor: 1
+                          firmwareMinor: 2
+                          firmwareBugFix: 0
+                      serialNumber:
+                        - value: XX000000
+                      machineFirmwareVersion:
+                        - firmwareMajor: 1
+                          firmwareMinor: 2
+                          firmwareBugFix: 0
+                          preRelease: ""
+                      numberOfSettings: 249
+                      machineMode: StandBy
+                      cupwarmerEnabled: false
+                      teaDoses:
+                        DoseB:
+                          doseIndex: DoseB
+                          stopTarget: 6
+                      teaDosesEnabled: true
+                      autoOnOffConfig:
+                        onTimeHours: 7
+                        onTimeMinutes: 0
+                        offTimeHours: 16
+                        offTimeMinutes: 0
+                        closedDay: 0
+                      autoOnOffEnabled: true
+                      abrCoffeeMass:
+                        Group1: 17
+                        Group2: 17
+                      abrPortafilterMass:
+                        Group1: 568.5
+                        Group2: 568.5
+                      avModeBrewingPressure: {}
+                      boilerTargetTemperature:
+                        CoffeeBoiler1: 89.5
+                        SteamBoiler: 122.9
+                      preinfusionModesAvailable:
+                        - ByGroup
+                        - ByDoseType
+                      preinfusionMode:
+                        Group1:
+                          groupNumber: Group1
+                          preinfusionStyle: None
+                        Group2:
+                          groupNumber: Group2
+                          preinfusionStyle: None
+                      preinfusionSettings: {}
+                      isLoaded: true
+                    type: string
+                    time: 1734192056499
+                  FlushStoppedGroup2Time:
+                    value: "1.8"
+                    type: number
+                    time: 1734104623508
+                  presence:
+                    value: connected
+                    type: string
+                    time: 1734173836003
+                  TeaDoseEnabled:
+                    value: "true"
+                    type: string
+                    time: 1722541875022
+                  BrewingStoppedGroup2DoseBCounter:
+                    value: "817"
+                    type: number
+                    time: 1734098860131
+                  SettingAutoOnOffEnabled:
+                    value: "true"
+                    type: string
+                    time: 1718386988684
+                  SteamBoilerEnabled:
+                    value: "true"
+                    type: string
+                    time: 1718386988465
+                  FlushStoppedGroup2Volume:
+                    value: "76"
+                    type: number
+                    time: 1734104623553
+                  FlushStoppedGroup1Volume:
+                    value: "64"
+                    type: number
+                    time: 1734104992361
+                  FlushStoppedGroup2DoseCCounter:
+                    value: "105"
+                    type: number
+                    time: 1734104456929
+                  FlushStoppedGroup2DoseIndex:
+                    value: DoseC
+                    type: string
+                    time: 1734104456924
+                  SystemInfo:
+                    value:
+                      network_interfaces:
+                        - name: wlan0
+                          address: X.X.X.X
+                        - name: docker0
+                          address: 172.17.0.1
+                      memory_info:
+                        available: 9.0M
+                        used: 481M
+                        total: 490M
+                      filesystem:
+                        dir: /usr/bin
+                        available: 557M
+                        used: 631M
+                        total: 1.2G
+                      uptime: 1 day,  4:32
+                      os_version: "20240618080957"
+                      mac_addr:
+                        eth0: XX:XX:XX:XX:XX:XX
+                        wlan: XX:XX:XX:XX:XX:XX
+                        bluetooth: XX:XX:XX:XX:XX:XX
+                    type: string
+                    time: 1734200195981
+                  BrewingStoppedGroup2DoseCCounter:
+                    value: "107"
+                    type: number
+                    time: 1733308976460
+                  SettingPreinfusionGroup1:
+                    value: >-
+                      [{"groupNumber":"Group1","doseType":"ByGroup","isPreWetTimeActive":false,"preWetTime":0,"isPreWetHoldTimeActive":false,"preWetHoldTime":0},{"groupNumber":"Group1","doseType":"DoseA","isPreWetTimeActive":false,"preWetTime":0,"isPreWetHoldTimeActive":false,"preWetHoldTime":0},{"groupNumber":"Group1","doseType":"DoseB","isPreWetTimeActive":false,"preWetTime":0,"isPreWetHoldTimeActive":false,"preWetHoldTime":0},{"groupNumber":"Group1","doseType":"DoseC","isPreWetTimeActive":false,"preWetTime":0,"isPreWetHoldTimeActive":false,"preWetHoldTime":0},{"groupNumber":"Group1","doseType":"DoseD","isPreWetTimeActive":true,"preWetTime":5,"isPreWetHoldTimeActive":true,"preWetHoldTime":10}]
+                    type: string
+                    time: 1706525074473
+                  FlushStoppedGroup2DoseDCounter:
+                    value: "35"
+                    type: number
+                    time: 1725961826054
+                  BrewingStoppedGroup1Time:
+                    value: "17.6"
+                    type: number
+                    time: 1734101718914
+                  BrewingStoppedGroup1DoseIndex:
+                    value: DoseB
+                    type: string
+                    time: 1734099117137
+                  BrewingStoppedGroup2DoseDCounter:
+                    value: "459"
+                    type: number
+                    time: 1733996049865
+                  FlushStoppedGroup1DoseACounter:
+                    value: "585"
+                    type: number
+                    time: 1734099135123
+                  gatewayFwVersion:
+                    value: "20240618080957"
+                    type: string
+                    time: 1734097496019
+                  BrewingStoppedGroup1DoseACounter:
+                    value: "5"
+                    type: number
+                    time: 1731682707678
+                  SettingAutoOnOffConfig:
+                    value:
+                      onTimeHours: 7
+                      onTimeMinutes: 0
+                      offTimeHours: 16
+                      offTimeMinutes: 0
+                      closedDay: 0
+                    type: string
+                    time: 1727361238010
+                  FlushStoppedGroup1DoseBCounter:
+                    value: "369"
+                    type: number
+                    time: 1734006883037
+                  FlushStoppedGroup1Counter:
+                    value: "14304"
+                    type: number
+                    time: 1734104456325
+                  FlushStoppedGroup1Time:
+                    value: "1.6"
+                    type: number
+                    time: 1734104992315
+                  BrewingStoppedGroup1DoseContinuousCounter:
+                    value: "121"
+                    type: number
+                    time: 1732116041674
+                  CoffeeBoiler1UpdateSetPoint:
+                    value: "89.5"
+                    type: number
+                    time: 1727419985681
+                  SteamBoilerUpdateTemperature:
+                    value: "68.98"
+                    type: number
+                    time: 1734201855913
+                  BrewingStoppedGroup1DoseBCounter:
+                    value: "456"
+                    type: number
+                    time: 1734099117149
+                  FlushStoppedGroup1DoseCCounter:
+                    value: "88"
+                    type: number
+                    time: 1734104456325
+                  BrewingStoppedGroup2DoseContinuousCounter:
+                    value: "209"
+                    type: number
+                    time: 1734086129676
+                  FlushStoppedGroup2Counter:
+                    value: "17333"
+                    type: number
+                    time: 1734104456929
+                  FlushSnapshotGroup2:
+                    value:
+                      groupConfiguration:
+                        groupNumber: Group2
+                        capabilities:
+                          groupType: AV_Group
+                          boilerId: CoffeeBoiler1
+                          boilerTemperature: 88.64
+                          hasScale: false
+                          hasSolenoid: true
+                          hasStraightInPortafilter: false
+                          hasAutoCleanSolenoid: false
+                          hasFlowmeter: true
+                          hasNeckHeaterExists: false
+                          hasRingHeaterExists: false
+                        dose:
+                          doseIndex: DoseC
+                          doseType: PulsesType
+                          stopTarget: 550
+                        doseMode:
+                          brewingType: PulsesType
+                      waterProperties:
+                        conductivity: 273
+                        hardness: 125
+                      flushInfo:
+                        abrTarget: 0
+                        abrCoffeeMass: 17
+                        abrPortafilterMass: 568.5
+                        doseIndex: DoseC
+                        mass: 0
+                        time: 1.8
+                        volume: 76
+                    type: string
+                    time: 1734104623606
+                  BrewingStoppedGroup2DoseIndex:
+                    value: DoseB
+                    type: string
+                    time: 1734098860118
+                  FlushSnapshotGroup1:
+                    value:
+                      groupConfiguration:
+                        groupNumber: Group1
+                        capabilities:
+                          groupType: AV_Group
+                          boilerId: CoffeeBoiler1
+                          boilerTemperature: 89.49
+                          hasScale: false
+                          hasSolenoid: true
+                          hasStraightInPortafilter: false
+                          hasAutoCleanSolenoid: false
+                          hasFlowmeter: true
+                          hasNeckHeaterExists: false
+                          hasRingHeaterExists: false
+                        dose:
+                          doseIndex: DoseC
+                          doseType: PulsesType
+                          stopTarget: 569
+                        doseMode:
+                          brewingType: PulsesType
+                      waterProperties:
+                        conductivity: 271
+                        hardness: 124
+                      flushInfo:
+                        abrTarget: 0
+                        abrCoffeeMass: 17
+                        abrPortafilterMass: 568.5
+                        doseIndex: DoseC
+                        mass: 0
+                        time: 1.6
+                        volume: 64
+                    type: string
+                    time: 1734104992423
+                  BrewingStoppedGroup1DoseCCounter:
+                    value: "107"
+                    type: number
+                    time: 1732541147275
+                  TeaDoseSettings:
+                    value:
+                      doseIndex: DoseB
+                      stopTarget: 6
+                    type: string
+                    time: 1722541917015
+                  FlushStoppedGroup1DoseDCounter:
+                    value: "38"
+                    type: number
+                    time: 1733240345189
+                  WaterHardness:
+                    value: "124"
+                    type: number
+                    time: 1734104982180
+                  FlushStoppedGroup1DoseContinuousCounter:
+                    value: "121"
+                    type: number
+                    time: 1732116445119
+                  BrewingStoppedGroup1DoseDCounter:
+                    value: "182"
+                    type: number
+                    time: 1733920806655
+                  FlushStoppedGroup2DoseContinuousCounter:
+                    value: "182"
+                    type: number
+                    time: 1733136778394
+                  BrewingStoppedGroup1Volume:
+                    value: "293"
+                    type: number
+                    time: 1734099117231
+                  BrewingStoppedGroup2Volume:
+                    value: "294"
+                    type: number
+                    time: 1734098860208
+                  CoffeeBoiler1Enabled:
+                    value: "true"
+                    type: string
+                    time: 1718386988369
+                  CoffeeBoiler1UpdateTemperature:
+                    value: "53.56"
+                    type: number
+                    time: 1734201962723
+                  machineFwVersion:
+                    value: 1.2.0
+                    type: string
+                    time: 1734097491143
+                  ABRPortafilterMassGroup2:
+                    value: "568.5"
+                    type: number
+                    time: 1718386988220
+                  ABRCoffeeMassGroup2:
+                    value: "17"
+                    type: number
+                    time: 1718386988130
+                  ABRPortafilterMassGroup1:
+                    value: "568.5"
+                    type: number
+                    time: 1718386988084
+                  ABRCoffeeMassGroup1:
+                    value: "17"
+                    type: number
+                    time: 1718386988047
+                  BrewingStoppedGroup1Counter:
+                    value: "3193"
+                    type: number
+                    time: 1734099117149
+                  BrewingSnapshotGroup2:
+                    value:
+                      groupConfiguration:
+                        groupNumber: Group2
+                        capabilities:
+                          groupType: AV_Group
+                          boilerId: CoffeeBoiler1
+                          boilerTemperature: 89.37
+                          hasScale: false
+                          hasSolenoid: true
+                          hasStraightInPortafilter: false
+                          hasAutoCleanSolenoid: false
+                          hasFlowmeter: true
+                          hasNeckHeaterExists: false
+                          hasRingHeaterExists: false
+                        dose:
+                          doseIndex: DoseB
+                          doseType: PulsesType
+                          stopTarget: 288
+                        doseMode:
+                          brewingType: PulsesType
+                      waterProperties:
+                        conductivity: 270
+                        hardness: 123
+                      brewingInfo:
+                        abrTarget: 0
+                        abrCoffeeMass: 17
+                        abrPortafilterMass: 568.5
+                        doseIndex: DoseB
+                        mass: 0
+                        stopReason: Automatic
+                        stopType: Volumetric
+                        time: 21.8
+                        volume: 295
+                    type: string
+                    time: 1734102610475
+                  BrewingSnapshotGroup1:
+                    value:
+                      groupConfiguration:
+                        groupNumber: Group1
+                        capabilities:
+                          groupType: AV_Group
+                          boilerId: CoffeeBoiler1
+                          boilerTemperature: 88.99
+                          hasScale: false
+                          hasSolenoid: true
+                          hasStraightInPortafilter: false
+                          hasAutoCleanSolenoid: false
+                          hasFlowmeter: true
+                          hasNeckHeaterExists: false
+                          hasRingHeaterExists: false
+                        dose:
+                          doseIndex: DoseB
+                          doseType: PulsesType
+                          stopTarget: 288
+                        doseMode:
+                          brewingType: PulsesType
+                      waterProperties:
+                        conductivity: 271
+                        hardness: 124
+                      brewingInfo:
+                        abrTarget: 0
+                        abrCoffeeMass: 17
+                        abrPortafilterMass: 568.5
+                        doseIndex: DoseB
+                        mass: 0
+                        stopReason: Automatic
+                        stopType: Volumetric
+                        time: 17.6
+                        volume: 293
+                    type: string
+                    time: 1734101719012
+                  BrewingStoppedGroup2Counter:
+                    value: "4382"
+                    type: number
+                    time: 1734098860131
+                  BrewingStoppedGroup2Time:
+                    value: "21.8"
+                    type: number
+                    time: 1734102610137
+                  FlushStoppedGroup1DoseIndex:
+                    value: DoseC
+                    type: string
+                    time: 1734104456313
+                  SteamBoilerUpdateSetPoint:
+                    value: "122.3"
+                    type: number
+                    time: 1723839291482
+                  FlushStoppedGroup2DoseACounter:
+                    value: "939"
+                    type: number
+                    time: 1734100509907
+                  BrewingStoppedGroup2DoseACounter:
+                    value: "6"
+                    type: number
+                    time: 1731581478695
+  /v1/professional/machines/awsproxy/{serial_number}/things/{relayr_id}/aggregate-metrics:
+    servers:
+      - url: https://gw-lmz.lamarzocco.io
+        description: Override base path for all operations relating to machine metrics
+    get:
+      tags:
+        - General
+      summary: Machine Metrics Between Dates
+      parameters:
+        - name: expr
+          in: query
+          schema:
+            type: string
+          example: COUNT
+        - name: aggr_mode
+          in: query
+          schema:
+            type: string
+          example: DAILY
+        - name: from
+          in: query
+          schema:
+            type: string
+          example: "2024-12-10T08:00:00.000Z"
+        - name: to
+          in: query
+          schema:
+            type: string
+          example: "2024-12-10T09:10:00.000Z"
+        - name: filterOn
+          in: query
+          schema:
+            type: string
+          example: >-
+            FlushStoppedGroup1Time,FlushStoppedGroup2Time,BrewingStoppedGroup1Time,BrewingStoppedGroup2Time
+        - name: serial_number
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: relayr_id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                data:
+                  FlushStoppedGroup2Time:
+                    - value: "2"
+                      type: double
+                      time: 1733788800000
+                  BrewingStoppedGroup1Time: []
+                  FlushStoppedGroup1Time:
+                    - value: "1"
+                      type: double
+                      time: 1733788800000
+                  BrewingStoppedGroup2Time:
+                    - value: "3"
+                      type: double
+                      time: 1733788800000
+                status: true
+  /latest-measurement:
+    servers:
+      - url: https://192.168.0.1
+        description: Override base path for all operations relating to local
+    get:
+      tags:
+        - Local
+      summary: Latest Measurement
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /config:
+    servers:
+      - url: https://192.168.0.1
+        description: Override base path for all operations relating to local
+    get:
+      tags:
+        - Local
+      summary: Config
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
